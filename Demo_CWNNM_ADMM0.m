@@ -4,7 +4,9 @@ fpath = fullfile(Original_image_dir, '*.png');
 im_dir  = dir(fpath);
 im_num = length(im_dir);
 
-nSig = [5 30 15];
+nSig = [40 20 30];
+% nSig = [5 30 15];
+% nSig = [30 10 50];
 
 Par.nSig      =   nSig;                                 % Variance of the noise image
 Par.win =   20;                                   % Non-local patch searching window
@@ -20,14 +22,12 @@ Par.display = true;
 Par.method = 'CWNNM_ADMM'
 Par.maxIter = 10;
 
-Par.model = '2';
-
 Par.delta     =   0.1;                                  % Parameter between each iter
-for lambda = [0.7:0.1:1]
+for lambda = [0.6:0.1:1]
     Par.lambda = lambda;
     for mu = 1.001
         Par.mu = mu;
-        for rho = [0.06]
+        for rho = [0.05]
             Par.rho = rho;
             % record all the results in each iteration
             Par.PSNR = zeros(Par.Iter, im_num, 'single');
@@ -53,21 +53,15 @@ for lambda = [0.7:0.1:1]
                 fprintf('The initial value of PSNR = %2.4f, SSIM = %2.4f \n', PSNR,SSIM);
                 %
                 time0 = clock;
-                if Par.model == '1'
-                    [im_out, Par] = CWNNM_ADMM1_Denoising( Par.nim, Par.I, Par );
-                elseif Par.model == '2'
-                    [im_out, Par] = CWNNM_ADMM2_Denoising( Par.nim, Par.I, Par );
-                else
-                    [im_out, Par] = CWNNM_ADMM_Denoising( Par.nim, Par.I, Par );
-                end
+                [im_out, Par] = CWNNM_ADMM2_Denoising( Par.nim, Par.I, Par );
                 fprintf('Total elapsed time = %f s\n', (etime(clock,time0)) );
                 im_out(im_out>255)=255;
                 im_out(im_out<0)=0;
                 % calculate the PSNR
                 Par.PSNR(Par.Iter, Par.image)  =   csnr( im_out, Par.I, 0, 0 );
                 Par.SSIM(Par.Iter, Par.image)      =  cal_ssim( im_out, Par.I, 0, 0 );
-                                imname = sprintf(['C:/Users/csjunxu/Desktop/ICCV2017/24images/' Par.method '_nSig' num2str(nSig(1)) num2str(nSig(2)) num2str(nSig(3)) '_' Par.model '_Oite' num2str(Par.Iter) '_Iite' num2str(Par.maxIter) '_rho' num2str(rho) '_mu' num2str(mu) '_lambda' num2str(lambda) '_' im_dir(i).name]);
-                                imwrite(im_out/255, imname);
+                imname = sprintf(['C:/Users/csjunxu/Desktop/ICCV2017/24images/' Par.method '_nSig' num2str(nSig(1)) num2str(nSig(2)) num2str(nSig(3)) '_' Par.model '_Oite' num2str(Par.Iter) '_Iite' num2str(Par.maxIter) '_rho' num2str(rho) '_mu' num2str(mu) '_lambda' num2str(lambda) '_' im_dir(i).name]);
+                imwrite(im_out/255, imname);
                 fprintf('%s : PSNR = %2.4f, SSIM = %2.4f \n',im_dir(i).name, Par.PSNR(Par.Iter, Par.image),Par.SSIM(Par.Iter, Par.image)     );
             end
             mPSNR=mean(Par.PSNR,2);

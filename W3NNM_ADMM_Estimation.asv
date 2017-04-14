@@ -1,4 +1,4 @@
-function [ EPat, W ] = W3NNM_ADMM_Estimation( NL_mat, Sigma_arr, CurPat, Par )
+function [ EPat, W] = W3NNM_ADMM_Estimation( NL_mat, Sigma_arr, CurPat, Par )
 
 EPat = zeros(size(CurPat));
 W    = zeros(size(CurPat));

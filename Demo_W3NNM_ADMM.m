@@ -22,12 +22,12 @@ Par.display = true;
 Par.method = 'W3NNM_ADMM';
 Par.maxIter = 10;
 
-Par.delta     =   0.1;                                  % Parameter between each iter
-for mu = 1.001
+Par.delta     =   0;                                  % Parameter between each iter
+for mu = [1.001 1.01]
     Par.mu = mu;
-    for lambda = [0.6 0.5 0.4]
+    for lambda = 0.6:0.1:1
         Par.lambda = lambda;
-        for rho = [0.05]
+        for rho = [0.01 0.05 0.1]
             Par.rho = rho;
             % record all the results in each iteration
             Par.PSNR = zeros(Par.Iter, im_num, 'single');
@@ -46,7 +46,6 @@ for mu = 1.001
                 end
                 %                 imname = sprintf(['C:/Users/csjunxu/Desktop/ICCV2017/24images/Noisy_nSig' num2str(nSig(1)) num2str(nSig(2)) num2str(nSig(3)) '_' im_dir(i).name]);
                 %                 imwrite(Par.nim/255, imname);
-                %
                 fprintf('%s :\n',im_dir(i).name);
                 PSNR =   csnr( Par.nim, Par.I, 0, 0 );
                 SSIM      =  cal_ssim( Par.nim, Par.I, 0, 0 );
@@ -71,7 +70,7 @@ for mu = 1.001
             mSSIM=mean(SSIM,2);
             fprintf('The best PSNR result is at %d iteration. \n',idx);
             fprintf('The average PSNR = %2.4f, SSIM = %2.4f. \n', mPSNR(idx),mSSIM);
-            name = sprintf([Par.method '_' Par.model '_nSig' num2str(nSig(1)) num2str(nSig(2)) num2str(nSig(3)) '_' Par.model '_Oite' num2str(Par.Iter) '_Iite' num2str(Par.maxIter) '_rho' num2str(rho) '_mu' num2str(mu) '_lambda' num2str(lambda) '.mat']);
+            name = sprintf([Par.method '_nSig' num2str(nSig(1)) num2str(nSig(2)) num2str(nSig(3)) '_Oite' num2str(Par.Iter) '_Iite' num2str(Par.maxIter) '_rho' num2str(rho) '_mu' num2str(mu) '_lambda' num2str(lambda) '.mat']);
             save(name,'nSig','PSNR','SSIM','mPSNR','mSSIM');
         end
     end
