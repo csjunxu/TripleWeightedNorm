@@ -1,4 +1,4 @@
-function  [Z] =  CWNNM_ADMM1( Y, NSig, Par )
+function  [Z] =  W3NNM_ADMM( Y, NSig, Par )
 % This routine solves the following weighted nuclear norm optimization problem with column weights,
 %
 % min |Z|_*,P + |Y-XW|_2,1  s.t.,  X = Z
@@ -23,11 +23,11 @@ if ~isfield(Par, 'display')
 end
 % Initializing optimization variables
 % Intialize the weight matrix W
-mNSig = min(NSig);
 if strcmp(Par.method, 'WNNM_ADMM') ==1
-    W = ones(1, length(NSig));
+    sigma = sqrt(mean(NSig.^2)) + eps;
+    W = 1/sigma * ones(1, length(NSig));
 else
-    W = (mNSig+eps) ./ (NSig+eps);
+    W = 1 ./ (NSig+eps);
 end
 % Initializing optimization variables
 X = zeros(size(Y));
@@ -36,9 +36,7 @@ A = zeros(size(Y));
 %% Start main loop
 iter = 0;
 PatNum       = size(Y,2);
-TempC  = Par.Constant * sqrt(PatNum) * mNSig^2;
-Par.rho = Par.rho * (mNSig+eps)^2;
-
+TempC  = Par.Constant * sqrt(PatNum);
 while iter < Par.maxIter
     iter = iter + 1;
     

@@ -21,13 +21,12 @@ Par.display = true;
 % Par.method = 'WNNM_ADMM';
 Par.method = 'W3NNM_ADMM';
 Par.maxIter = 10;
-Par.model = '2';
 
 Par.delta     =   0.1;                                  % Parameter between each iter
-for lambda = [0.6 0.5 0.4]
-    Par.lambda = lambda;
-    for mu = 1.001
-        Par.mu = mu;
+for mu = 1.001
+    Par.mu = mu;
+    for lambda = [0.6 0.5 0.4]
+        Par.lambda = lambda;
         for rho = [0.05]
             Par.rho = rho;
             % record all the results in each iteration
@@ -54,16 +53,7 @@ for lambda = [0.6 0.5 0.4]
                 fprintf('The initial value of PSNR = %2.4f, SSIM = %2.4f \n', PSNR,SSIM);
                 %
                 time0 = clock;
-                if Par.model == '1'
-                    1
-                    [im_out, Par] = CWNNM_ADMM1_Denoising( Par.nim, Par.I, Par );
-                elseif Par.model == '2'
-                    2
-                    [im_out, Par] = CWNNM_ADMM2_Denoising( Par.nim, Par.I, Par );
-                else
-                    0
-                    [im_out, Par] = CWNNM_ADMM_Denoising( Par.nim, Par.I, Par );
-                end
+                [im_out, Par] = W3NNM_ADMM_Denoising( Par.nim, Par.I, Par );
                 fprintf('Total elapsed time = %f s\n', (etime(clock,time0)) );
                 im_out(im_out>255)=255;
                 im_out(im_out<0)=0;
