@@ -18,12 +18,10 @@ Par.Iter          =   8;                            % total iter numbers
 Par.display = true;
 
 
-% Par.method = 'WNNM_ADMM'
-Par.method = 'CWNNM_ADMM'
+% Par.method = 'WNNM_ADMM';
+Par.method = 'W3NNM_ADMM';
 Par.maxIter = 10;
 Par.model = '2';
-
-
 
 Par.delta     =   0.1;                                  % Parameter between each iter
 for lambda = [0.6 0.5 0.4]
