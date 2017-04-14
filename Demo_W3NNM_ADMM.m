@@ -27,7 +27,7 @@ for mu = [1.001 1.01]
     Par.mu = mu;
     for lambda = 0.6:0.1:1
         Par.lambda = lambda;
-        for rho = [0.01 0.05 0.1]
+        for rho = [0.05 0.1]
             Par.rho = rho;
             % record all the results in each iteration
             Par.PSNR = zeros(Par.Iter, im_num, 'single');
@@ -47,7 +47,7 @@ for mu = [1.001 1.01]
                 %                 imname = sprintf(['C:/Users/csjunxu/Desktop/ICCV2017/24images/Noisy_nSig' num2str(nSig(1)) num2str(nSig(2)) num2str(nSig(3)) '_' im_dir(i).name]);
                 %                 imwrite(Par.nim/255, imname);
                 fprintf('%s :\n',im_dir(i).name);
-                PSNR =   csnr( Par.nim, Par.I, 0, 0 );
+                PSNR =   csnr( Par.nim, Par.I, 0, 0  );
                 SSIM      =  cal_ssim( Par.nim, Par.I, 0, 0 );
                 fprintf('The initial value of PSNR = %2.4f, SSIM = %2.4f \n', PSNR,SSIM);
                 %
