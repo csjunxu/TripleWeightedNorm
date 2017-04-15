@@ -17,10 +17,10 @@ im_num = length(im_dir);
 nSig = [40];
 
 Par.nSig      =   nSig;                                 % Variance of the noise image
-Par.win =   20;                                   % Non-local patch searching window
+Par.win =   30;                                   % Non-local patch searching window
 Par.Constant         =  2 * sqrt(2);                              % Constant num for the weight vector
 Par.ps       =   8;                            % Patch size
-Par.step        =   3;
+Par.step        =   7;
 Par.Outerloop  =   8;                            % total iter numbers
 Par.Innerloop =   2;                                    % InnerLoop Num of between re-blockmatching
 Par.display = true;
