@@ -38,7 +38,7 @@ for lambda1 = [0 0.0001 0.001 0.01 0.1]
         Par.lambda2 = lambda2;
         for mu = [1.01 1.1]
             Par.mu = mu;
-            for rho = [0.5 1 2]
+            for rho = [0.1:0.1:0.9]
                 Par.rho = rho;
                 % record all the results in each iteration
                 Par.PSNR = zeros(Par.Outerloop, im_num, 'single');
