@@ -10,7 +10,7 @@ for  i      =  1 : length(Par.SelfIndex) % For each keypatch group
     E_Temp 	=   W3NNM_ADMM( Temp, SigmaRow(:, i), SigmaCol(:, NL_mat(1:Par.nlsp,i)), Par); % WNNM Estimation
     E_Temp = E_Temp + M_Temp;
     % update ErrorRow
-    ErrorRow(:, Par.SelfIndex(i)) = mean((NY(:, NL_mat(1:Par.nlsp,i)) - E_Temp) .^2, 2);
+    ErrorRow(:, i) = mean((NY(:, NL_mat(1:Par.nlsp,i)) - E_Temp) .^2, 2);
     % 
     EPat(:,NL_mat(1:Par.nlsp,i))  = EPat(:,NL_mat(1:Par.nlsp,i))+E_Temp;
     WPat(:,NL_mat(1:Par.nlsp,i))     = WPat(:,NL_mat(1:Par.nlsp,i))+ones(Par.ps2ch, Par.nlsp);
