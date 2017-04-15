@@ -34,8 +34,9 @@ while iter < Par.maxIter
     % min_{X} ||W1 * (Y - X) * W2||_F^2 + 0.5 * rho * ||X - Z + 1/rho * D||_F^2
     % The solution is equal to solve A * X + X * B =C
     A = diag(W1.^2);
-    B = 0.5 * Par.rho * diag(1./(W2.^2));
-    C = diag(W1.^2) * Y + ( 0.5 * Par.rho * Z - 0.5 * D ) * diag(1./(W2.^2));
+    W2inv = diag(1./(W2.^2));
+    B = 0.5 * Par.rho * W2inv;
+    C = diag(W1.^2) * Y + 0.5 * ( Par.rho * Z - D ) * W2inv;
     X = sylvester(A, B, C);
     
     %% update Z, fix X and D

@@ -36,14 +36,14 @@ for lambda1 = [0 0.0001 0.001 0.01 0.1]
     Par.lambda1 = lambda1;
     for lambda2 = 0.2:0.1:1
         Par.lambda2 = lambda2;
-        for rho = [0.1]
-            Par.rho = rho;
-            for mu = [1.01]
-                Par.mu = mu;
+        for mu = [1.01 1.1]
+            Par.mu = mu;
+            for rho = [0.5 1 2]
+                Par.rho = rho;
                 % record all the results in each iteration
                 Par.PSNR = zeros(Par.Outerloop, im_num, 'single');
                 Par.SSIM = zeros(Par.Outerloop, im_num, 'single');
-                for i = 1:im_num
+                for i = 12 %1:im_num
                     Par.image = i;
                     Par.nSig = nSig;
                     Par.nlsp        =   Par.nlspini;   % Initial Non-local Patch number
@@ -82,7 +82,7 @@ for lambda1 = [0 0.0001 0.001 0.01 0.1]
                 fprintf('The best PSNR result is at %d iteration. \n',idx);
                 fprintf('The average PSNR = %2.4f, SSIM = %2.4f. \n', mPSNR(idx),mSSIM);
                 %             name = sprintf([Par.method '_nSig' num2str(nSig(1)) num2str(nSig(2)) num2str(nSig(3)) '_Oite' num2str(Par.Outerloop) '_Iite' num2str(Par.maxIter) '_rho' num2str(rho) '_mu' num2str(mu) '_lambda' num2str(lambda) '.mat']);
-                name = sprintf([Par.method '_nSig' num2str(nSig) '_Oite' num2str(Par.Outerloop) '_Iite' num2str(Par.maxIter) '_rho' num2str(rho) '_mu' num2str(mu) '_lambda1' num2str(lambda1) '_lambda2' num2str(lambda2) '.mat']);
+                name = sprintf([Par.method '_nSig' num2str(nSig) '_Oite' num2str(Par.Outerloop) '_Iite' num2str(Par.maxIter) '_rho' num2str(rho) '_mu' num2str(mu) '_l1' num2str(lambda1) '_l2' num2str(lambda2) '.mat']);
                 save(name,'nSig','PSNR','SSIM','mPSNR','mSSIM');
             end
         end
