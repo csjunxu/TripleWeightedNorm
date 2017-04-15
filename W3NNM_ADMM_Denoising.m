@@ -6,39 +6,43 @@ Par.w = w;
 Par.ch = ch;
 Par = SearchNeighborIndex( Par );
 % noisy image to patch
-NoiPat =	Image2PatchNew( N_Img, Par );
-% NoiPatCh = [NoiPat(1:Par.ps2, :) NoiPat(Par.ps2+1:2*Par.ps2, :) NoiPat(2*Par.ps2+1:3*Par.ps2, :)];
-Par.TolN = size(NoiPat, 2);
-Sigma_arrCh = zeros(Par.ch, Par.TolN);
-for iter = 1 : Par.Iter
-    Par.iter = iter;
+NY =	Image2PatchNew( N_Img, Par );
+% NYCh = [NY(1:Par.ps2, :) NY(Par.ps2+1:2*Par.ps2, :) NY(2*Par.ps2+1:3*Par.ps2, :)];
+Par.TolN = size(NY, 2);
+SigmaRow = zeros(Par.ch, Par.TolN);
+for ite = 1 : Par.Outerloop
     % iterative regularization
     E_Img =	E_Img + Par.delta * (N_Img - E_Img);
     % image to patch
-    CurPat =	Image2PatchNew( E_Img, Par );
-    %     CurPatCh = [CurPat(1:Par.ps2, :) CurPat(Par.ps2+1:2*Par.ps2, :) CurPat(2*Par.ps2+1:3*Par.ps2, :)];
+    Y =	Image2PatchNew( E_Img, Par );
+    %     YCh = [Y(1:Par.ps2, :) Y(Par.ps2+1:2*Par.ps2, :) Y(2*Par.ps2+1:3*Par.ps2, :)];
     % estimate local noise variance
     for c = 1:Par.ch
-        if (iter == 1) && (Par.Iter > 1) && Par.lambda ~= 0
+        if (ite == 1) && (Par.Outerloop > 1) && Par.lambda1 ~= 0
             %             TempSigma_arrCh = sqrt(max(0, repmat(Par.nSig0(c)^2, 1, size(CurPat, 2)) - mean((NoiPat((c-1)*Par.ps2+1:c*Par.ps2, :) - CurPat((c-1)*Par.ps2+1:c*Par.ps2, :)).^2)));
-            TempSigma_arrCh = sqrt(abs(repmat(Par.nSig0(c)^2, 1, size(CurPat, 2)) - mean((NoiPat((c-1)*Par.ps2+1:c*Par.ps2, :) - CurPat((c-1)*Par.ps2+1:c*Par.ps2, :)).^2)));
+            TempSigmaRow = sqrt(abs(repmat(Par.nSig(c)^2, 1, size(Y, 2)) - mean((NY((c-1)*Par.ps2+1:c*Par.ps2, :) - Y((c-1)*Par.ps2+1:c*Par.ps2, :)).^2)));
         else
             %             TempSigma_arrCh = Par.lambda*sqrt(max(0, repmat(Par.nSig0(c)^2, 1, size(CurPat, 2)) - mean((NoiPat((c-1)*Par.ps2+1:c*Par.ps2, :) - CurPat((c-1)*Par.ps2+1:c*Par.ps2, :)).^2)));
-            TempSigma_arrCh = Par.lambda*sqrt(abs(repmat(Par.nSig0(c)^2, 1, size(CurPat, 2)) - mean((NoiPat((c-1)*Par.ps2+1:c*Par.ps2, :) - CurPat((c-1)*Par.ps2+1:c*Par.ps2, :)).^2)));
+            TempSigmaRow = Par.lambda1*sqrt(abs(repmat(Par.nSig(c)^2, 1, size(Y, 2)) - mean((NY((c-1)*Par.ps2+1:c*Par.ps2, :) - Y((c-1)*Par.ps2+1:c*Par.ps2, :)).^2)));
         end
-        Sigma_arrCh((c-1)*Par.ps2+1:c*Par.ps2, :) = repmat(TempSigma_arrCh, [Par.ps2, 1]);
+        SigmaRow((c-1)*Par.ps2+1:c*Par.ps2, :) = repmat(TempSigmaRow, [Par.ps2, 1]);
     end
-    if (mod(iter-1, Par.Innerloop) == 0)
+    SigmaCol = Par.lambda2*sqrt(abs(repmat(Par.nSig^2, 1, size(Y,2)) - mean((NY - Y).^2))); %Estimated Local Noise Level
+    
+    if (mod(ite-1, Par.Innerloop) == 0)
         Par.nlsp = Par.nlsp - 10;  % Lower Noise level, less NL patches
-        NL_mat  =  Block_Matching(CurPat, Par);% Caculate Non-local similar patches for each
+        NL_mat  =  Block_Matching(Y, Par);% Caculate Non-local similar patches for each
+        if ite == 1 && Par.lambda2~=0
+            SigmaCol = Par.nSig * ones(size(SigmaCol));
+        end
     end
-    [Y_hat, W_hat]  =  W3NNM_ADMM_Estimation( NL_mat, Sigma_arrCh, CurPat, Par );   % Estimate all the patches
+    [Y_hat, W_hat]  =  W3NNM_ADMM_Estimation( Y, NL_mat, SigmaRow, SigmaCol, Par );   % Estimate all the patches
     E_Img = PGs2Image(Y_hat, W_hat, Par);
     PSNR  = csnr( O_Img, E_Img, 0, 0 );
     SSIM      =  cal_ssim( O_Img, E_Img, 0, 0 );
-    fprintf( 'Iter = %2.3f, PSNR = %2.2f, SSIM = %2.2f \n', iter, PSNR, SSIM );
-    Par.PSNR(iter, Par.image)  =   PSNR;
-    Par.SSIM(iter, Par.image)      =  SSIM;
+    fprintf( 'Iter = %2.3f, PSNR = %2.2f, SSIM = %2.2f \n', ite, PSNR, SSIM );
+    Par.PSNR(ite, Par.image)  =   PSNR;
+    Par.SSIM(ite, Par.image)      =  SSIM;
 end
 return;
 
