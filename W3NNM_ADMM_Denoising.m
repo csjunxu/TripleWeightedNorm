@@ -23,8 +23,8 @@ for ite = 1 : Par.Outerloop
             SigmaRow((c-1)*Par.ps2+1:c*Par.ps2, :) = repmat(TempSigmaRow, [1, length(Par.SelfIndex)]);
             %             TempSigmaRow = sqrt(abs(repmat(Par.nSig(c)^2, 1, size(Y, 2)) - mean((NY((c-1)*Par.ps2+1:c*Par.ps2, :) - Y((c-1)*Par.ps2+1:c*Par.ps2, :)).^2)));
         else
+            SigmaRow((c-1)*Par.ps2+1:c*Par.ps2, :) = exp(-Par.lambda1*max(0, repmat(Par.nSig(c)^2, Par.ps2, length(Par.SelfIndex)) - ErrorRow((c-1)*Par.ps2+1:c*Par.ps2, :)));
             %             TempSigmaRow = Par.lambda1*sqrt(max(0, repmat(Par.nSig(c)^2, Par.ps2, length(Par.SelfIndex)) - ErrorRow((c-1)*Par.ps2+1:c*Par.ps2, :)));
-            SigmaRow((c-1)*Par.ps2+1:c*Par.ps2, :) = exp( - Par.lambda1*sqrt(max(0, repmat(Par.nSig(c)^2, Par.ps2, length(Par.SelfIndex)) - ErrorRow((c-1)*Par.ps2+1:c*Par.ps2, :))));
             %             TempSigmaRow = Par.lambda1*sqrt(abs(repmat(Par.nSig(c)^2, 1, size(Y, 2)) - mean((NY((c-1)*Par.ps2+1:c*Par.ps2, :) - Y((c-1)*Par.ps2+1:c*Par.ps2, :)).^2)));
         end
     end
