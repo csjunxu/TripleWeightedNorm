@@ -25,7 +25,7 @@ Par.maxIter = 10;
 Par.delta     =   0;                                  % Parameter between each iter
 for mu = [1.001 1.01]
     Par.mu = mu;
-    for lambda = 0.6:0.1:1
+    for lambda = 0.3:0.1:1
         Par.lambda = lambda;
         for rho = [0.05 0.1]
             Par.rho = rho;
@@ -59,7 +59,7 @@ for mu = [1.001 1.01]
                 % calculate the PSNR
                 Par.PSNR(Par.Iter, Par.image)  =   csnr( im_out, Par.I, 0, 0 );
                 Par.SSIM(Par.Iter, Par.image)      =  cal_ssim( im_out, Par.I, 0, 0 );
-                imname = sprintf(['C:/Users/csjunxu/Desktop/ICCV2017/24images/' Par.method '_nSig' num2str(nSig(1)) num2str(nSig(2)) num2str(nSig(3)) '_' Par.model '_Oite' num2str(Par.Iter) '_Iite' num2str(Par.maxIter) '_rho' num2str(rho) '_mu' num2str(mu) '_lambda' num2str(lambda) '_' im_dir(i).name]);
+                imname = sprintf(['C:/Users/csjunxu/Desktop/ICCV2017/24images/' Par.method '_nSig' num2str(nSig(1)) num2str(nSig(2)) num2str(nSig(3)) '_Oite' num2str(Par.Iter) '_Iite' num2str(Par.maxIter) '_rho' num2str(rho) '_mu' num2str(mu) '_lambda' num2str(lambda) '_' im_dir(i).name]);
                 imwrite(im_out/255, imname);
                 fprintf('%s : PSNR = %2.4f, SSIM = %2.4f \n',im_dir(i).name, Par.PSNR(Par.Iter, Par.image),Par.SSIM(Par.Iter, Par.image)     );
             end

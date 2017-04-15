@@ -57,18 +57,18 @@ while iter < Par.maxIter
     [U, SigmaTemp, V] =   svd(full(Temp), 'econ');
     [SigmaZ, svp] = ClosedWNNM(diag(SigmaTemp), 2/Par.rho*TempC, eps);
     Z =  U(:, 1:svp) * diag(SigmaZ) * V(:, 1:svp)';
-    % check the convergence conditions
-    stopC = max(max(abs(X - Z)));
-%     if Par.display && (iter==1 || mod(iter,10)==0 || stopC<tol)
-%         disp(['iter ' num2str(iter) ', mu=' num2str(Par.mu,'%2.1e') ...
-%             ', rank=' num2str(rank(Z,1e-4*norm(Z,2))) ', stopADMM=' num2str(stopC,'%2.3e')]);
-%     end
-    if stopC < tol
-        break;
-    else
+    %     % check the convergence conditions
+    %     stopC = max(max(abs(X - Z)));
+    %     if Par.display && (iter==1 || mod(iter,10)==0 || stopC<tol)
+    %         disp(['iter ' num2str(iter) ', mu=' num2str(Par.mu,'%2.1e') ...
+    %             ', rank=' num2str(rank(Z,1e-4*norm(Z,2))) ', stopADMM=' num2str(stopC,'%2.3e')]);
+    %     end
+    %     if stopC < tol
+    %         break;
+    %     else
     % update the multiplier A, fix Z and X
-        D = D + Par.rho * (X - Z);
-        Par.rho = min(maxrho, Par.mu * Par.rho);
-    end
+    D = D + Par.rho * (X - Z);
+    Par.rho = min(maxrho, Par.mu * Par.rho);
+    %     end
 end
 return;

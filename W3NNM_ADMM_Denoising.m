@@ -19,7 +19,7 @@ for iter = 1 : Par.Iter
     %     CurPatCh = [CurPat(1:Par.ps2, :) CurPat(Par.ps2+1:2*Par.ps2, :) CurPat(2*Par.ps2+1:3*Par.ps2, :)];
     % estimate local noise variance
     for c = 1:Par.ch
-        if (iter == 1) && (Par.Iter > 1)
+        if (iter == 1) && (Par.Iter > 1) && Par.lambda ~= 0
             %             TempSigma_arrCh = sqrt(max(0, repmat(Par.nSig0(c)^2, 1, size(CurPat, 2)) - mean((NoiPat((c-1)*Par.ps2+1:c*Par.ps2, :) - CurPat((c-1)*Par.ps2+1:c*Par.ps2, :)).^2)));
             TempSigma_arrCh = sqrt(abs(repmat(Par.nSig0(c)^2, 1, size(CurPat, 2)) - mean((NoiPat((c-1)*Par.ps2+1:c*Par.ps2, :) - CurPat((c-1)*Par.ps2+1:c*Par.ps2, :)).^2)));
         else
