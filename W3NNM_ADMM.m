@@ -13,11 +13,11 @@ tol = 1e-12;
 % Intialize the weight matrix W
 if strcmp(Par.method, 'WNNM_ADMM') ==1
     sigma = sqrt(mean(NSigRow.^2)) + eps;
-    W1 = 1/sqrt(sigma) * ones(1, length(NSigRow));
-    W2 = 1/sqrt(NSigCol(1)) * ones(1, length(NSigCol));
+    W1 = 1/sigma * ones(1, length(NSigRow));
+    W2 = 1/NSigCol(1) * ones(1, length(NSigCol));
 else
-    W1 = 1 ./ (sqrt(NSigRow)+eps);
-    W2 = 1 ./ (sqrt(NSigCol)+eps);
+    W1 = 1 ./ (NSigRow+eps);
+    W2 = 1 ./ (NSigCol+eps);
 end
 % Initializing optimization variables
 X = zeros(size(Y));
