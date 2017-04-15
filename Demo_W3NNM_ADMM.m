@@ -24,14 +24,14 @@ Par.step        =   6;
 Par.Outerloop  =   8;                            % total iter numbers
 Par.Innerloop =   2;                                    % InnerLoop Num of between re-blockmatching
 Par.display = true;
-
+Par.nlspini = 90;
 
 % Par.method = 'WNNM_ADMM';
 Par.method = 'W3NNM_ADMM';
 Par.maxIter = 10;
 Par.maxrho = 100;
 
-Par.delta     =   0;                                  % Parameter between each iter
+Par.delta     =   0.06;                                  % Parameter between each iter
 for mu = [1.001 1.01]
     Par.mu = mu;
     for rho = [0.05 0.1]
@@ -46,7 +46,7 @@ for mu = [1.001 1.01]
                 for i = 1:im_num
                     Par.image = i;
                     Par.nSig = nSig;
-                    Par.nlsp        =   90;   % Initial Non-local Patch number
+                    Par.nlsp        =   Par.nlspini;   % Initial Non-local Patch number
                     Par.I =  double( imread(fullfile(Original_image_dir, im_dir(i).name)) );
                     S = regexp(im_dir(i).name, '\.', 'split');
                     [h, w, ch] = size(Par.I);
