@@ -43,7 +43,7 @@ for lambda1 = [0 0.0001 0.001 0.01 0.1]
                 % record all the results in each iteration
                 Par.PSNR = zeros(Par.Outerloop, im_num, 'single');
                 Par.SSIM = zeros(Par.Outerloop, im_num, 'single');
-                for i = 12 %1:im_num
+                for i = 1:im_num
                     Par.image = i;
                     Par.nSig = nSig;
                     Par.nlsp        =   Par.nlspini;   % Initial Non-local Patch number
