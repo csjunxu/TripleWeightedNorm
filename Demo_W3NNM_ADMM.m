@@ -23,13 +23,15 @@ Par.ps       =   7;                            % Patch size
 Par.step        =   6;
 Par.Outerloop  =   8;                            % total iter numbers
 Par.Innerloop =   2;                                    % InnerLoop Num of between re-blockmatching
-
 Par.display = true;
 
 
 % Par.method = 'WNNM_ADMM';
 Par.method = 'W3NNM_ADMM';
 Par.maxIter = 10;
+Par.maxrho = 100;
+
+
 
 Par.delta     =   0;                                  % Parameter between each iter
 for mu = [1.001 1.01]

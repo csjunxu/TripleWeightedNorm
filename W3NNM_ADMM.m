@@ -1,4 +1,4 @@
-function  [Z] =  W3NNM_ADMM( Y, NSig, Par )
+function  [Z] =  W3NNM_ADMM( Y, NSigRow, NSigCol, Par )
 % This routine solves the following weighted nuclear norm optimization problem with column weights,
 %
 % min |Z|_*,P + |W1(Y-X)W2|_2,1  s.t.,  X = Z
@@ -8,29 +8,16 @@ function  [Z] =  W3NNM_ADMM( Y, NSig, Par )
 %        W1 -- d*d matrix of row weights
 %        W2 -- M*M matrix of column weights
 
-tol = 1e-12;
-maxrho = 100;
-if ~isfield(Par, 'maxIter')
-    Par.maxIter = 10;
-end
-if ~isfield(Par, 'rho')
-    Par.rho = 1;
-end
-if ~isfield(Par, 'mu')
-    Par.mu = 1;
-end
-if ~isfield(Par, 'display')
-    Par.display = true;
-end
+% tol = 1e-12; 
 % Initializing optimization variables
 % Intialize the weight matrix W
 if strcmp(Par.method, 'WNNM_ADMM') ==1
-    sigma = sqrt(mean(NSig.^2)) + eps;
-    W1 = 1/sigma * ones(1, size(NSig, 1));
-    W2 = 1/NSig(1, 1) * ones(1, size(NSig, 2));
+    sigma = sqrt(mean(NSigRow.^2)) + eps;
+    W1 = 1/sigma * ones(1, size(NSigRow, 1));
+    W2 = 1/NSigCol(1, 1) * ones(1, size(NSigCol, 2));
 else
-    W1 = 1 ./ (NSig(:, 1)+eps);
-    W2 = 1 ./ (NSig(1, :)+eps);
+    W1 = 1 ./ (NSigRow(:, 1)+eps);
+    W2 = 1 ./ (NSigCol(1, :)+eps);
 end
 % Initializing optimization variables
 X = zeros(size(Y));
@@ -68,7 +55,7 @@ while iter < Par.maxIter
     %     else
     % update the multiplier A, fix Z and X
     D = D + Par.rho * (X - Z);
-    Par.rho = min(maxrho, Par.mu * Par.rho);
+    Par.rho = min(Par.maxrho, Par.mu * Par.rho);
     %     end
 end
 return;
