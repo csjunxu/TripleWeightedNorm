@@ -28,7 +28,7 @@ iter = 0;
 PatNum       = size(Y,2);
 TempC  = Par.Constant * sqrt(PatNum);
 while iter < Par.maxIter
-    iter = iter + 1;
+    iter = iter + 1; 
     
     %% update X, fix Z and D
     % min_{X} ||W1 * (Y - X) * W2||_F^2 + 0.5 * rho * ||X - Z + 1/rho * A||_F^2
