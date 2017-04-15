@@ -1,7 +1,7 @@
 function  [Z] =  W3NNM_ADMM( Y, NSigRow, NSigCol, Par )
 % This routine solves the following weighted nuclear norm optimization problem with column weights,
 %
-% min |Z|_*,P + |W1(Y-X)W2|_2,1  s.t.,  X = Z
+% min |Z|_*,P + |W1(Y-X)W2|_F,2  s.t.,  X = Z
 % inputs:
 %        Y -- d*M data matrix, d is the data dimension, and M is the number
 %             of image patches.
@@ -31,7 +31,7 @@ while iter < Par.maxIter
     iter = iter + 1;
     
     %% update X, fix Z and D
-    % min_{X} ||W1 * (Y - X) * W2||_F^2 + 0.5 * rho * ||X - Z + 1/rho * A||_F^2
+    % min_{X} ||W1 * (Y - X) * W2||_F^2 + 0.5 * rho * ||X - Z + 1/rho * D||_F^2
     % The solution is equal to solve A * X + X * B =C
     A = diag(W1.^2);
     B = 0.5 * Par.rho * diag(1./(W2.^2));
@@ -44,6 +44,22 @@ while iter < Par.maxIter
     [U, SigmaTemp, V] =   svd(full(Temp), 'econ');
     [SigmaZ, svp] = ClosedWNNM(diag(SigmaTemp), 2/Par.rho*TempC, eps);
     Z =  U(:, 1:svp) * diag(SigmaZ) * V(:, 1:svp)';
+    
+    %     %% update X, fix Z
+    %     % min_{X} ||W1 * (Y - X) * W2||_F^2 + 0.5 * rho * ||X - Z||_F^2
+    %     % The solution is equal to solve A * X + X * B =C
+    %     A = diag(W1.^2);
+    %     B = 0.5 * Par.rho * diag(1./(W2.^2));
+    %     C = diag(W1.^2) * Y + ( 0.5 * Par.rho * Z ) * diag(1./(W2.^2));
+    %     X = sylvester(A, B, C);
+    %
+    %     %% update Z, fix X
+    %     % min_{Z} ||Z||_*,w + 0.5 * rho * ||Z - X||_F^2
+    %     [U, SigmaTemp, V] =   svd(full(X), 'econ');
+    %     [SigmaZ, svp] = ClosedWNNM(diag(SigmaTemp), 2/Par.rho*TempC, eps);
+    %     Z =  U(:, 1:svp) * diag(SigmaZ) * V(:, 1:svp)';
+    
+    
     %% check the convergence conditions
     stopC = max(max(abs(X - Z)));
     %     if Par.display && (iter==1 || mod(iter,10)==0 || stopC<tol)
