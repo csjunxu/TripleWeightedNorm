@@ -32,14 +32,14 @@ Par.maxIter = 10;
 Par.maxrho = 100;
 
 Par.delta     =   0.06;                                  % Parameter between each iter
-for lambda1 = [0 0.0001 0.001 0.01 0.1]
-    Par.lambda1 = lambda1;
-    for lambda2 = 0.2:0.1:1
-        Par.lambda2 = lambda2;
-        for mu = [1.01 1.1]
-            Par.mu = mu;
-            for rho = [0.1:0.1:0.9]
-                Par.rho = rho;
+for mu = [1.01 1.05 1.1]
+    Par.mu = mu;
+    for rho = [0.3:0.2:0.9]
+        Par.rho = rho;
+        for lambda1 = [0.0001:0.0001:0.0008]
+            Par.lambda1 = lambda1;
+            for lambda2 = 0.2:0.1:1
+                Par.lambda2 = lambda2;
                 % record all the results in each iteration
                 Par.PSNR = zeros(Par.Outerloop, im_num, 'single');
                 Par.SSIM = zeros(Par.Outerloop, im_num, 'single');
